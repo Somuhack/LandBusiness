@@ -49,15 +49,15 @@ const Navbar = () => {
                     to="/service/action" 
                     className={({ isActive }) => "dropdown-item" + (isActive ? " active" : "")}
                   >
-                    Action
+                   All Lands
                   </NavLink>
                 </li>
                 <li>
                   <NavLink 
-                    to="/service/another-action" 
+                    to="/add-land" 
                     className={({ isActive }) => "dropdown-item" + (isActive ? " active" : "")}
                   >
-                    Another action
+                   Post Lands
                   </NavLink>
                 </li>
                 <li>

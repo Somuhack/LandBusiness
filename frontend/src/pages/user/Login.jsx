@@ -2,7 +2,14 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { loginUser } from '../../utils/api';
 import { toast } from 'react-toastify';
-
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 const Login = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({ email: '', password: '' });
@@ -25,6 +32,9 @@ const Login = () => {
             if (res.status === 200){
                 toast.success('Login successful');
                 localStorage.setItem('userToken', res.data.token);
+                localStorage.setItem('username', res.data.user.name);
+                localStorage.setItem('userid', res.data.user.id);
+                localStorage.setItem('email', res.data.user.email);
                 navigate('/home');
               
             }else{

@@ -4,7 +4,7 @@ import API from './axiosConfig';
 export const registerUser = (data) => API.post('/user/register', data);
 export const loginUser = (data) => API.post('/user/login', data);
 export const forgotPassword = (email) => API.post('/user/forgot-password', { email });
-export const resetPassword = (token, password) => API.post(`/user/reset-password/${token}`, { password });
+export const resetPassword = (token, password) => API.post(`/user/reset-password/${token}`, { newPassword:password});
 
 // 🌍 Land APIs
 export const addLand = (formData) => API.post('/land/add', formData); // formData with images
