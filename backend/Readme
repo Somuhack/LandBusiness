@@ -1,0 +1,9 @@
+now make 
+1.make Full backend using node
+2.Define Projec File Structure
+3.Make All Possible Controller for(User :{Registration,Login,ForgotPassword(sendLinktomailusingNodeMAiler),ResetPassword},Land:
+Saler:{Add Land,Delete Land,
+Retrive:{GetById,GetBySelerId,GetAllLands}},
+Apply:{AddApply,GetAllDetailsByApplyUserId,RemoveApply,GetAllApplyersDetails,dowanloadDetails,
+Buyer:{GetAllDetailsByBuyerId,ApproveOnlyOneAsBuyer}
+Now Using documents As a Multiple Image of Lands and store it in Cloudinary,use bycript,cors,jwt,Nodemailer,dotenv.

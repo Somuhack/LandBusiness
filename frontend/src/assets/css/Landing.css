@@ -1,0 +1,71 @@
+.hero-section {
+  background: url("../img/hero2.jpg") no-repeat center center fixed;
+  background-size: cover;
+  height: 80vh;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: -1;
+}
+
+.hero-text-wrapper {
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-text {
+  font-size: 2.5rem;
+  font-weight: bold;
+  white-space: nowrap;
+  background: linear-gradient(90deg, #ff416c, #71d18e);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  opacity: 0;
+  animation: appear 0.5s forwards ease-in 1s;
+}
+
+.hero-mask {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 0;
+  height: 100%;
+  background: black;
+  z-index: 2;
+  transform: translateX(-50%);
+  animation: revealCenter 4s ease-out forwards;
+}
+
+@keyframes revealCenter {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes appear {
+  to {
+    opacity: 1;
+  }
+}
+
+.animated-text {
+  font-size: 1.25rem;
+  opacity: 0;
+  animation: fadeIn 2s ease-in 4s forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
