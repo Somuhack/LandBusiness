@@ -23,6 +23,6 @@ router.get('/:id', getLandById);
 router.get('/seller/own', auth, getLandBySellerId);
 
 // Get all lands
-router.get('/', getAllLands);
+router.get('/',getAllLands);
 
 module.exports = router;

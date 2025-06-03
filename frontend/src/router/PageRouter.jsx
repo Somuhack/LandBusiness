@@ -8,6 +8,10 @@ import ForgotPassword from "../pages/user/ForgotPassword";
 import ResetPassword from "../pages/user/ResetPassword";
 import About from "../pages/About";
 import AddLand from "../components/AddLand";
+import AllLands from "../components/AllLands";
+import LandDetails from "../components/LandDetails";
+import MakePayment from "../pages/Payment/MakePayment";
+
 const Router = () => {
   return (
       <Routes>
@@ -21,8 +25,10 @@ const Router = () => {
           <Route path="/home" element={<PrivateRoute><Home/></PrivateRoute>} />
           <Route path="/about" element={<PrivateRoute><About/></PrivateRoute>} />
           <Route path="/add-land" element={<PrivateRoute><AddLand/></PrivateRoute>} />
-      
-       
+          <Route path="/lands" element={<PrivateRoute><AllLands/></PrivateRoute>} />
+          <Route path="/land/:id" element={<PrivateRoute><LandDetails/></PrivateRoute>} />
+          <Route path="/make-payment" element={<PrivateRoute><MakePayment/></PrivateRoute>} />
+          <Route path="*" element={<Landing />} />
       </Routes>
   )
 }

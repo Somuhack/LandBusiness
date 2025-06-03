@@ -10,8 +10,8 @@ export const resetPassword = (token, password) => API.post(`/user/reset-password
 export const addLand = (formData) => API.post('/land/add', formData); // formData with images
 export const deleteLand = (id) => API.delete(`/land/delete/${id}`);
 export const getLandById = (id) => API.get(`/land/${id}`);
-export const getLandBySellerId = () => API.get('/land/seller');
-export const getAllLands = () => API.get('/land/all');
+export const getLandBySellerId = () => API.get('/land/seller/own');
+export const getAllLands = () => API.get('/land/');
 
 // 📝 Apply APIs
 export const applyToLand = (landId) => API.post('/apply/apply', { landId });
@@ -21,7 +21,7 @@ export const getApplicants = (landId) => API.get(`/apply/applicants/${landId}`);
 export const downloadApplicants = (landId) => API.get(`/apply/download/${landId}`, { responseType: 'blob' });
 export const getMyPurchases = () => API.get('/apply/my-buys');
 export const approveBuyer = (data) => API.post('/apply/approve-buyer', data);
-
+export const getApplyersBySalerId = (salerId) => API.get(`/apply/applyers-by-saler/${salerId}`);
 // 💳 Payment APIs
 export const makePayment = (data) => API.post('/payment/pay', data);
 export const getBuyerPayments = () => API.get('/payment/buyer/history');

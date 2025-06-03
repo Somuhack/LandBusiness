@@ -4,11 +4,19 @@ const Property = require('../models/Property');
 
 exports.makePayment = async (req, res) => {
   try {
-    const { propertyId, amount } = req.body;
+    const { propertyId, amount, cardNumber } = req.body;
     const buyerId = req.user;
+
+    if (!cardNumber || !/^\d{16}$/.test(cardNumber)) {
+      return res.status(400).json({ msg: 'Card number must be 16 digits' });
+    }
 
     const property = await Property.findById(propertyId);
     if (!property) return res.status(404).json({ msg: 'Property not found' });
+
+    if (property.isSale) {
+      return res.status(400).json({ msg: 'Property already sold' });
+    }
 
     const salerId = property.salerId;
 
@@ -17,13 +25,12 @@ exports.makePayment = async (req, res) => {
       salerId,
       propertyId,
       amount,
+      cardNumber,
     });
-
-    // Update property with buyer info and mark it sold
+    if(!payment) return res.status(500).json({ msg: 'Payment failed' });
     property.isSale = true;
     await property.save();
-
-    res.status(201).json({ msg: 'Payment successful and ownership transferred', data: payment });
+    res.status(201).json(payment);
   } catch (err) {
     res.status(500).json({ msg: err.message });
   }

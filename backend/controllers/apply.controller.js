@@ -34,6 +34,15 @@ exports.getAllDetailsByApplyUserId = async (req, res) => {
     res.status(500).json({ msg: err.message });
   }
 };
+// exports.getAllApplyByUserId = async (req, res) => {
+//   try {
+//     const userId = req.user;
+//     const lands = await Property.find({ applyers: userId }).populate('salerId', 'name email');
+//     res.status(200).json(lands);
+//   } catch (err) {
+//     res.status(500).json({ msg: err.message });
+//   }
+// };
 
 // 3. Remove application
 exports.removeApply = async (req, res) => {
@@ -91,6 +100,19 @@ exports.approveOnlyOneAsBuyer = async (req, res) => {
     await property.save();
 
     res.status(200).json({ msg: 'Buyer approved successfully' });
+  } catch (err) {
+    res.status(500).json({ msg: err.message });
+  }
+};
+exports.getAllApplyersBySalerId = async (req, res) => {
+  try {
+    const { salerId } = req.params;
+
+    const lands = await Property.find({ salerId })
+      .populate('applyers', 'name email') // get applyers' details
+      .select('location amount khatianNo applyers'); // you can add more fields as needed
+
+    res.status(200).json(lands);
   } catch (err) {
     res.status(500).json({ msg: err.message });
   }

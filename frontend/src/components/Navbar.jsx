@@ -24,7 +24,7 @@ const Navbar = () => {
           <ul className="navbar-nav ms-auto">
             <li className="nav-item">
               <NavLink 
-                to="/" 
+                to="/home" 
                 end
                 className={({ isActive }) => "nav-link" + (isActive ? " active" : "")}
               >
@@ -46,7 +46,7 @@ const Navbar = () => {
               <ul className="dropdown-menu">
                 <li>
                   <NavLink 
-                    to="/service/action" 
+                    to="/lands" 
                     className={({ isActive }) => "dropdown-item" + (isActive ? " active" : "")}
                   >
                    All Lands
@@ -88,8 +88,9 @@ const Navbar = () => {
                 Contact us
               </NavLink>
             </li>
-
-            <li className="nav-item">
+           {!localStorage.getItem('userToken')?(
+          <>
+              <li className="nav-item">
               <NavLink 
                 to="/login" 
                 className={({ isActive }) => "nav-link" + (isActive ? " active" : "")}
@@ -106,6 +107,9 @@ const Navbar = () => {
                 Registration
               </NavLink>
             </li>
+          </>
+           ):("")}
+           
           </ul>
         </div>
       </div>

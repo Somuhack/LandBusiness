@@ -87,9 +87,11 @@ exports.getLandBySellerId = async (req, res) => {
 
 exports.getAllLands = async (req, res) => {
   try {
-    const lands = await Property.find().populate('salerId buyerId', 'name email');
+    const lands = await Property.find()
+      .populate('salerId', 'name email farmerType'); // Include other fields if needed
     res.status(200).json(lands);
   } catch (err) {
-    res.status(500).json({ msg: err.message });
+    console.error(err);
+    res.status(500).json({ msg: err.message, data: "Server error" });
   }
 };

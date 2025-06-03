@@ -20,5 +20,5 @@ router.get('/my-buys', auth, applyController.getAllDetailsByBuyerId);
 
 // Approve one user as buyer
 router.post('/approve-buyer', auth, applyController.approveOnlyOneAsBuyer);
-
+router.get('/applyers-by-saler/:salerId', applyController.getAllApplyersBySalerId);
 module.exports = router;

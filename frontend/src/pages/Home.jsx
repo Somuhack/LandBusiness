@@ -1,23 +1,14 @@
-// import React from 'react'
-// import { ToastContainer } from 'react-toastify';
-// import 'react-toastify/dist/ReactToastify.css';
-
-// // Inside App component:
-
-// const Home = () => {
-//   return (
-//     <div>Home<ToastContainer position="top-right" /></div>
-//   )
-// }
-
-// export default Home
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import LandTable from "../components/LandTable";
 import React, { useEffect, useState } from "react";
 import MainLayout from "../Layout/MainLayout";
 import {
- getLandBySellerId,
+  getLandBySellerId,
   deleteLand,
-  getAllLands ,
+  getAllLands,
+  approveBuyer,
+  getApplyersBySalerId
 } from "../utils/api";
 
 const Home = () => {
@@ -30,14 +21,18 @@ const Home = () => {
   const [salersLand, setSalersLand] = useState([]);
   const [appliedLands, setAppliedLands] = useState([]);
   const [allLands, setAllLands] = useState([]);
+  const [receivedApplications, setReceivedApplications] = useState([]);
+
   const fetchAllLands = async () => {
-  try {
-    const res = await getAllLands();
-    setAllLands(res.data);
-  } catch (err) {
-    console.error("Failed to fetch all lands", err);
-  }
-};  const fetchSalerLands = async () => {
+    try {
+      const res = await getAllLands();
+      setAllLands(res.data);
+    } catch (err) {
+      console.error("Failed to fetch all lands", err);
+    }
+  };
+
+  const fetchSalerLands = async () => {
     try {
       const res = await getLandBySellerId(userId);
       setSalersLand(res.data);
@@ -45,16 +40,34 @@ const Home = () => {
       console.error("Failed to fetch saler lands", err);
     }
   };
+  useEffect(() => {
+    const handleUnload = () => {
+      localStorage.clear();
+    };
 
+    window.addEventListener("unload", handleUnload);
+    return () => {
+      window.removeEventListener("unload", handleUnload);
+    };
+  }, []);
   const fetchAppliedLands = async () => {
     try {
-      const res = await getAllLands ();
+      const res = await getAllLands();
       const applied = res.data.filter((land) =>
-        land.applyers.some((applyer) => applyer._id === userId)
+        land.applyers.includes(userId)
       );
       setAppliedLands(applied);
     } catch (err) {
       console.error("Failed to fetch applied lands", err);
+    }
+  };
+
+  const fetchReceivedApplications = async () => {
+    try {
+      const res = await getApplyersBySalerId(userId);
+      setReceivedApplications(res.data);
+    } catch (err) {
+      console.error("Failed to fetch received applications", err);
     }
   };
 
@@ -74,11 +87,24 @@ const Home = () => {
     window.location.href = "/";
   };
 
- useEffect(() => {
-  fetchSalerLands();
-  fetchAppliedLands();
-  fetchAllLands();
-}, []);
+  const handleApprove = async (landId, userIdToApprove) => {
+    if (!window.confirm("Are you sure you want to approve this buyer?")) return;
+    try {
+      await approveBuyer({ landId, buyerId: userIdToApprove });
+      alert("Buyer approved successfully!");
+      fetchReceivedApplications(); // Refresh
+    } catch (err) {
+      console.error("Approval failed", err);
+      alert("Failed to approve buyer.");
+    }
+  };
+
+  useEffect(() => {
+    fetchSalerLands();
+    fetchAppliedLands();
+    fetchAllLands();
+    fetchReceivedApplications();
+  }, []);
 
   const renderContent = () => {
     switch (activeTab) {
@@ -86,11 +112,12 @@ const Home = () => {
         return (
           <>
             <div className="row g-4 mb-4">
-              {[ 
+              <ToastContainer position="top-right" />
+              {[
                 { title: "Apply", count: appliedLands.length, bg: "warning", text: "dark" },
-                { title: "Buying", count: 1, bg: "success", text: "white" },
-                { title: "Selling", count: salersLand.length, bg: "danger", text: "white" },
-                { title: "Post", count: 10, bg: "info bg-opacity-50", text: "dark" },
+                { title: "Buying", count: 0, bg: "success", text: "white" },
+                { title: "Selling", count: 0, bg: "danger", text: "white" },
+                { title: "Post", count: salersLand.length, bg: "info bg-opacity-50", text: "dark" },
               ].map((stat, i) => (
                 <div className="col-md-6 col-lg-3" key={i}>
                   <div className={`card text-center bg-${stat.bg} text-${stat.text} shadow`}>
@@ -106,57 +133,107 @@ const Home = () => {
           </>
         );
       case "post":
-  return (
-    <LandTable
-      title="Your Posted Lands"
-      columns={[
-        { label: "Location", key: "location" },
-        { label: "Mauja", key: "mauja" },
-        { label: "Khatian No", key: "khatianNo" },
-        { label: "Amount", key: "amount" },
-      ]}
-      data={salersLand}
-      onDelete={handleDelete}
-    />
-  );
+        return (
+          <LandTable
+            title="Your Posted Lands"
+            columns={[
+              { label: "Location", key: "location" },
+              { label: "Mauja", key: "mauja" },
+              { label: "Khatian No", key: "khatianNo" },
+              { label: "Amount", key: "amount" },
+            ]}
+            data={salersLand}
+            onDelete={handleDelete}
+          />
+        );
       case "apply":
-  return (
-    <LandTable
-      title="Lands You've Applied To"
-      columns={[
-        { label: "Location", key: "location" },
-        { label: "Mauja", key: "mauja" },
-        { label: "Khatian No", key: "khatianNo" },
-      ]}
-      data={appliedLands}
-    />
-  );
-     case "buy":
-  return (
-    <LandTable
-      title="Buy Land"
-      columns={[
-        { label: "Location", key: "location" },
-        { label: "Mauja", key: "mauja" },
-        { label: "Khatian No", key: "khatianNo" },
-        { label: "Amount", key: "amount" },
-      ]}
-      data={allLands.filter(land => land.sellerId !== userId)}
-    />
-  );
+        return (
+          <LandTable
+            title="Lands You've Applied To"
+            columns={[
+              { label: "Location", key: "location" },
+              { label: "Mauja", key: "mauja" },
+              { label: "Khatian No", key: "khatianNo" },
+            ]}
+            data={appliedLands}
+          />
+        );
+      case "buy":
+        return (
+          <LandTable
+            title="Buy Land"
+            columns={[
+              { label: "Location", key: "location" },
+              { label: "Mauja", key: "mauja" },
+              { label: "Khatian No", key: "khatianNo" },
+              { label: "Amount", key: "amount" },
+            ]}
+            data={allLands.filter(land => land.salerId == userId)}
+          />
+        );
       case "sale":
-  return (
-    <LandTable
-      title="Your Sale Land"
-      columns={[
-        { label: "Location", key: "location" },
-        { label: "Mauja", key: "mauja" },
-        { label: "Khatian No", key: "khatianNo" },
-        { label: "Amount", key: "amount" },
-      ]}
-      data={salersLand}
-    />
-  );
+        return (
+          <LandTable
+            title="Your Sale Land"
+            columns={[
+              { label: "Location", key: "location" },
+              { label: "Mauja", key: "mauja" },
+              { label: "Khatian No", key: "khatianNo" },
+              { label: "Amount", key: "amount" },
+            ]}
+            data={salersLand}
+          />
+        );
+      case "applications":
+        return (
+          <div>
+            <h4 className="mb-3">Users Who Applied To Your Lands</h4>
+            {receivedApplications.length === 0 ? (
+              <p>No applications received yet.</p>
+            ) : (
+              receivedApplications.map((land) => (
+                <div key={land._id} className="card mb-4">
+                  <div className="card-header bg-light">
+                    <strong>Land:</strong> {land.location} | <strong>Khatian No:</strong> {land.khatianNo}
+                  </div>
+                  <div className="card-body">
+                    {land.applyers.length === 0 ? (
+                      <p>No applicants for this land.</p>
+                    ) : (
+                      <table className="table table-bordered">
+                        <thead className="table-light">
+                          <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {land.applyers.map((applyer, index) => (
+                            <tr key={applyer._id}>
+                              <td>{index + 1}</td>
+                              <td>{applyer.name}</td>
+                              <td>{applyer.email}</td>
+                              <td>
+                                <button
+                                  className="btn btn-sm btn-success"
+                                  onClick={() => handleApprove(land._id, applyer._id)}
+                                >
+                                  Approve
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    )}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        );
       default:
         return null;
     }
@@ -179,41 +256,23 @@ const Home = () => {
               <div className="bg-light p-3 rounded shadow-sm">
                 <h5 className="fw-bold mb-4">Hi, {username}</h5>
                 <ul className="list-group list-group-flush">
-                  <li
-                    className={`list-group-item list-group-item-action ${activeTab === "dashboard" ? "active" : ""}`}
-                    onClick={() => setActiveTab("dashboard")}
-                    style={{ cursor: "pointer" }}
-                  >
-                    Dashboard
-                  </li>
-                  <li
-                    className={`list-group-item list-group-item-action ${activeTab === "apply" ? "active" : ""}`}
-                    onClick={() => setActiveTab("apply")}
-                    style={{ cursor: "pointer" }}
-                  >
-                    Apply Lands
-                  </li>
-                  <li
-                    className={`list-group-item list-group-item-action ${activeTab === "post" ? "active" : ""}`}
-                    onClick={() => setActiveTab("post")}
-                    style={{ cursor: "pointer" }}
-                  >
-                    Post Land
-                  </li>
-                  <li
-                    className={`list-group-item list-group-item-action ${activeTab === "buy" ? "active" : ""}`}
-                    onClick={() => setActiveTab("buy")}
-                    style={{ cursor: "pointer" }}
-                  >
-                    Buy Land
-                  </li>
-                  <li
-                    className={`list-group-item list-group-item-action ${activeTab === "sale" ? "active" : ""}`}
-                    onClick={() => setActiveTab("sale")}
-                    style={{ cursor: "pointer" }}
-                  >
-                    Sale Land
-                  </li>
+                  {[
+                    { key: "dashboard", label: "Dashboard" },
+                    { key: "apply", label: "Apply Lands" },
+                    { key: "post", label: "Post Land" },
+                    { key: "buy", label: "Buy Land" },
+                    { key: "sale", label: "Sale Land" },
+                    { key: "applications", label: "Show Applyers" },
+                  ].map(tab => (
+                    <li
+                      key={tab.key}
+                      className={`list-group-item list-group-item-action ${activeTab === tab.key ? "active" : ""}`}
+                      onClick={() => setActiveTab(tab.key)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      {tab.label}
+                    </li>
+                  ))}
                   <li
                     className="list-group-item list-group-item-action text-danger fw-bold"
                     onClick={handleLogout}

@@ -14,7 +14,7 @@ app.use(express.json());
 
 // Routes
 app.use('/api/user',userrouter);
-app.use('/api/lands',landrouter);
+app.use('/api/land',landrouter);
 app.use('/api/apply',applyRoutes);
 app.use('/api/payment',paymentRoutes);
 
