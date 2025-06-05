@@ -6,7 +6,7 @@ const userrouter= require('./routes/user.routes')
 const landrouter=require('./routes/land.routes')
 const applyRoutes = require('./routes/apply.routes')
 const paymentRoutes = require('./routes/payment.routes');
-
+const contactRoutes = require('./routes/contact.routes');
 
 const app = express();
 app.use(cors())
@@ -17,6 +17,7 @@ app.use('/api/user',userrouter);
 app.use('/api/land',landrouter);
 app.use('/api/apply',applyRoutes);
 app.use('/api/payment',paymentRoutes);
+app.use('/api/contact',contactRoutes);
 
 
 const PORT = process.env.PORT;

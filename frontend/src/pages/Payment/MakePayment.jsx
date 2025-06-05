@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { makePayment } from '../../utils/api';
+import MainLayout from '../../Layout/MainLayout';
 
 const MakePayment = () => {
   const location = useLocation();
@@ -48,7 +49,8 @@ const MakePayment = () => {
   };
 
   return (
-    <div className="container mt-5" style={{ maxWidth: '600px' }}>
+   <MainLayout>
+     <div className="container mt-5" style={{ maxWidth: '600px' }}>
       <h3 className="mb-4">Make a Payment</h3>
       {message && (
         <div className={`alert ${message.includes('success') ? 'alert-success' : 'alert-danger'}`}>
@@ -94,6 +96,7 @@ const MakePayment = () => {
         </button>
       </form>
     </div>
+   </MainLayout>
   );
 };
 

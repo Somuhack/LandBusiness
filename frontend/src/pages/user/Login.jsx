@@ -31,10 +31,10 @@ const Login = () => {
             const res = await loginUser(formData);
             if (res.status === 200){
                 toast.success('Login successful');
-                localStorage.setItem('userToken', res.data.token);
-                localStorage.setItem('username', res.data.user.name);
-                localStorage.setItem('userid', res.data.user.id);
-                localStorage.setItem('email', res.data.user.email);
+                sessionStorage.setItem('userToken', res.data.token);
+                sessionStorage.setItem('username', res.data.user.name);
+                sessionStorage.setItem('userid', res.data.user.id);
+                sessionStorage.setItem('email', res.data.user.email);
                 navigate('/home');
               
             }else{

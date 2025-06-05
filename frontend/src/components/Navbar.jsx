@@ -3,10 +3,10 @@ import { NavLink } from 'react-router-dom';
 
 const Navbar = () => {
   return (
-    <nav className="navbar navbar-expand-lg bg-primary navbar-dark fs-4">
+    <nav className="navbar navbar-expand-lg b navbar-dark fs-4" style={{ backgroundColor: '#85193C' }}>
       <div className="container-fluid">
         <NavLink className="navbar-brand" to="/">
-          Navbar
+         <span className="fw-bold fs-3 f-italic"> PrivateLand</span>
         </NavLink>
         <button
           className="navbar-toggler"
@@ -88,7 +88,7 @@ const Navbar = () => {
                 Contact us
               </NavLink>
             </li>
-           {!localStorage.getItem('userToken')?(
+           {!sessionStorage.getItem('userToken')?(
           <>
               <li className="nav-item">
               <NavLink 

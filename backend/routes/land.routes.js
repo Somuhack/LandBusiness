@@ -7,7 +7,8 @@ const {
   deleteLand,
   getLandById,
   getLandBySellerId,
-  getAllLands
+  getAllLands,
+  getbuyingLandByid
 } = require('../controllers/land.controller');
 
 // Add land with multiple images
@@ -21,6 +22,8 @@ router.get('/:id', getLandById);
 
 // Get lands by seller (authenticated user)
 router.get('/seller/own', auth, getLandBySellerId);
+
+router.get('/buyer/own', auth, getbuyingLandByid);
 
 // Get all lands
 router.get('/',getAllLands);

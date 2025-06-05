@@ -56,9 +56,10 @@ exports.deleteLand = async (req, res) => {
     if (property.salerId.toString() !== req.user)
       return res.status(403).json({ msg: 'Unauthorized' });
 
-    await property.remove();
+    await property.deleteOne(); // Correct instance method
     res.status(200).json({ msg: 'Land deleted successfully' });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ msg: err.message });
   }
 };
@@ -79,6 +80,15 @@ exports.getLandBySellerId = async (req, res) => {
   try {
     const sellerId = req.user;
     const lands = await Property.find({ salerId: sellerId }).populate('buyerId', 'name email');
+    res.status(200).json(lands);
+  } catch (err) {
+    res.status(500).json({ msg: err.message });
+  }
+};
+exports.getbuyingLandByid= async (req, res) => {
+  try {
+    const sellerId = req.user;
+    const lands = await Property.find({ buyerId: sellerId }).populate('buyerId', 'name email');
     res.status(200).json(lands);
   } catch (err) {
     res.status(500).json({ msg: err.message });

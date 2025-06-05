@@ -2,13 +2,15 @@ import React, { useEffect, useState } from 'react';
 import MainLayout from '../Layout/MainLayout';
 import { getAllLands } from '../utils/api';
 import { useNavigate } from 'react-router-dom';
+
 const Services = () => {
   const navigate = useNavigate();
   const [landdata, setLandData] = useState([]);
   const [filters, setFilters] = useState({ location: '', khatianNo: '', budget: '', type: '' });
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
-  const currentUserId = localStorage.getItem('userid');
+  const currentUserId = sessionStorage.getItem('userid');
+  const [imageLoaded, setImageLoaded] = useState({});
 
   const FetchLands = async () => {
     try {
@@ -18,9 +20,11 @@ const Services = () => {
       console.error("Error fetching land data:", error);
     }
   };
- const handlleShowDetails = (id) => {
-   navigate(`/land/${id}`);
- }
+
+  const handlleShowDetails = (id) => {
+    navigate(`/land/${id}`);
+  };
+
   useEffect(() => {
     FetchLands();
   }, []);
@@ -46,6 +50,10 @@ const Services = () => {
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
+  };
+
+  const handleImageLoad = (id) => {
+    setImageLoaded(prev => ({ ...prev, [id]: true }));
   };
 
   return (
@@ -79,29 +87,47 @@ const Services = () => {
           ) : (
             currentItems.map((land, index) => {
               const isNotPostedByCurrentUser = land.salerId?._id !== currentUserId;
+              const imgSrc = land.documents?.[0] || "https://via.placeholder.com/400";
+
               return (
                 <div className="col-md-4 mb-4" key={index}>
                   <div className="card h-100">
-                    <img
-                      src={land.documents?.[0] || "https://via.placeholder.com/400"}
-                      className="card-img-top"
-                      alt="Land"
-                      style={{ height: '200px', objectFit: 'cover' }}
-                    />
+                    <div style={{ height: '200px', position: 'relative', backgroundColor: '#f0f0f0' }}>
+                      {!imageLoaded[land._id] && (
+                        <div className="d-flex justify-content-center align-items-center h-100">
+                          <div className="spinner-border text-primary" role="status" />
+                        </div>
+                      )}
+                      <img
+                        src={imgSrc}
+                        alt="Land"
+                        className="card-img-top"
+                        onLoad={() => handleImageLoad(land._id)}
+                        style={{
+                          height: '200px',
+                          objectFit: 'cover',
+                          display: imageLoaded[land._id] ? 'block' : 'none'
+                        }}
+                      />
+                    </div>
                     <div className="card-body">
                       <h5 className="card-title">₹{land.amount.toLocaleString()}</h5>
                       <p className="card-text">{land.location}</p>
                       <p className="card-text"><small>Khatian No: {land.khatianNo}</small></p>
                       <p className="card-text"><small>Type: {land.salerId?.farmerType || 'N/A'}</small></p>
 
-                      {isNotPostedByCurrentUser? (
+                      {isNotPostedByCurrentUser ? (
                         <div className="mt-3 d-flex justify-content-between">
                           {land.isSale ? (
-                            <p className="text-danger fw-bold ">Sold</p>
-                          ):""}
-                          <button onClick={() => handlleShowDetails(land._id)} className="btn btn-sm btn-outline-primary">{land.isSale ? "Show Details" : "Apply And Show Details"}</button>
+                            <p className="text-danger fw-bold">Sold</p>
+                          ) : ""}
+                          <button onClick={() => handlleShowDetails(land._id)} className="btn btn-sm btn-outline-primary">
+                            {land.isSale ? "Show Details" : "Apply And Show Details"}
+                          </button>
                         </div>
-                      ):<p className='text-center text-info'>Posted By You</p>}
+                      ) : (
+                        <p className='text-center text-info'>Posted By You</p>
+                      )}
                     </div>
                   </div>
                 </div>

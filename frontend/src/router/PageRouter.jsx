@@ -11,6 +11,8 @@ import AddLand from "../components/AddLand";
 import AllLands from "../components/AllLands";
 import LandDetails from "../components/LandDetails";
 import MakePayment from "../pages/Payment/MakePayment";
+import ContactUs from "../pages/ContactUs";
+
 
 const Router = () => {
   return (
@@ -20,6 +22,7 @@ const Router = () => {
         <Route path="/registration" element={<Registration/>} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword/>} />
+        <Route path="/contact" element={<ContactUs/>} />
         {/* Private Routes */}
       
           <Route path="/home" element={<PrivateRoute><Home/></PrivateRoute>} />

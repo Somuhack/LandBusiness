@@ -19,7 +19,7 @@ const animatedPhrases = [
 ];
 
 const Landing = () => {
-  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
+  // const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [currentPhrase, setCurrentPhrase] = useState(0);
 
   useEffect(() => {
@@ -29,14 +29,14 @@ const Landing = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  // const handleChange = (e) => {
+  //   setFormData({ ...formData, [e.target.name]: e.target.value });
+  // };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(formData);
-  };
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   console.log(formData);
+  // };
 
   return (
     <MainLayout>
@@ -116,7 +116,7 @@ const Landing = () => {
 
 
       {/* Contact Section */}
-      <section className="py-5 bg-white contact-section">
+      {/* <section className="py-5 bg-white contact-section">
         <div className="container">
           <div className="row">
             <div className="col-md-6 mb-4">
@@ -163,7 +163,7 @@ const Landing = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
     </MainLayout>
   );
 };

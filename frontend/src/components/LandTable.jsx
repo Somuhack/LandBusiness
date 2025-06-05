@@ -1,6 +1,11 @@
 import React from "react";
 
-const LandTable = ({ title, columns, data, onDelete }) => {
+// Helper to safely access nested keys (e.g., "propertyId.amount")
+const getNestedValue = (obj, keyPath) => {
+  return keyPath.split('.').reduce((acc, key) => acc?.[key], obj) ?? '';
+};
+
+const LandTable = ({ title, columns, data, onDelete,onEdit }) => {
   return (
     <div className="mb-4">
       <h4 className="fw-bold mb-3">{title}</h4>
@@ -12,23 +17,28 @@ const LandTable = ({ title, columns, data, onDelete }) => {
               {columns.map((col, idx) => (
                 <th key={idx}>{col.label}</th>
               ))}
-              {onDelete && <th>Action</th>}
+              {onDelete && onEdit && <th>Action</th>} 
             </tr>
           </thead>
           <tbody>
             {data.length === 0 ? (
-              <tr><td colSpan={columns.length + (onDelete ? 2 : 1)} className="text-center">No records</td></tr>
+              <tr>
+                <td colSpan={columns.length + (onDelete ? 2 : 1)} className="text-center">No records</td>
+              </tr>
             ) : (
               data.map((item, index) => (
                 <tr key={item._id || index}>
                   <td>{index + 1}</td>
                   {columns.map((col, idx) => (
-                    <td key={idx}>{item[col.key]}</td>
+                    <td key={idx}>{getNestedValue(item, col.key)}</td>
                   ))}
-                  {onDelete && (
+                  {onDelete && onDelete && (
                     <td>
                       <button className="btn btn-sm btn-danger" onClick={() => onDelete(item._id)}>
                         Delete
+                      </button>
+                      <button className="btn mx-4 btn-sm btn-success" onClick={() => onEdit(item._id)}>
+                        Update
                       </button>
                     </td>
                   )}
