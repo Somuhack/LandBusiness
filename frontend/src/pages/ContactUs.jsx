@@ -23,6 +23,7 @@ const ContactUs = () => {
       setError('');
       setFormData({ name: '', email: '', message: '' });
     } catch(err) {
+      
       setError('Something went wrong. Try again later.');
       setSuccess('');
     }

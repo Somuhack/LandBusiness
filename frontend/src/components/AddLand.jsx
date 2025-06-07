@@ -107,7 +107,7 @@ const LandPurchaseForm = () => {
             </div>
 
             <div className="col-md-6">
-              <label className="form-label">Area</label>
+              <label className="form-label">Area in Acres (eg:1 acre)</label>
               <input type="text" name="area" className="form-control" value={formData.area} onChange={handleChange} />
             </div>
 

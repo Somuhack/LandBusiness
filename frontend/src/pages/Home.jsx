@@ -443,8 +443,10 @@ const Home = () => {
       const res = await getAllLands();
       const applied = res.data.filter((land) =>
         land.applyers.includes(userId)
+
       );
       setAppliedLands(applied);
+      console.log(applied);
     } catch (err) {
       console.error("Failed to fetch applied lands", err);
     }

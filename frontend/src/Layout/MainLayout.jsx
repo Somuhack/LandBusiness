@@ -6,7 +6,9 @@ const MainLayout = ({children}) => {
    <>
    <Navbar/>
    {children}
-   <Footer/>
+   <footer style={{position:"relative",top:"150px"}} >
+    <Footer/>
+   </footer>
    </>
   )
 }

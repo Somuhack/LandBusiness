@@ -22,6 +22,7 @@ const paymentSchema = new mongoose.Schema(
     },
     cardNumber: {
       type: String,
+      unique: true,
       required: true,
       validate: {
         validator: function (v) {

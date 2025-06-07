@@ -6,7 +6,7 @@ const Navbar = () => {
     <nav className="navbar navbar-expand-lg b navbar-dark fs-4" style={{ backgroundColor: '#85193C' }}>
       <div className="container-fluid">
         <NavLink className="navbar-brand" to="/">
-         <span className="fw-bold fs-3 f-italic"> PrivateLand</span>
+         <span className="fw-bold fs-3 f-italic"> PrivateLandWorld</span>
         </NavLink>
         <button
           className="navbar-toggler"
